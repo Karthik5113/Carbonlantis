@@ -68,7 +68,9 @@ export interface PublicHomeData {
 export type DashboardTabId =
   | 'dashboard'
   | 'monitoring'
+  | 'slurry-preparation'
   | 'mineral-dosing'
+  | 'dosing'
   | 'carbon-removal'
   | 'users'
   | 'settings';
@@ -308,16 +310,30 @@ export interface MrvReportPackage {
 }
 
 /* --- 5. User Management Domain Types --- */
+export interface UserModulePermissions {
+  dashboard: boolean;
+  monitoring: boolean;
+  mineralDosing: 'yes' | 'authorized' | 'no';
+  carbonRemoval: boolean;
+  userManagement: boolean;
+  settings: 'yes' | 'limited' | 'no';
+}
+
 export interface UserAccount {
   id: string;
   name: string;
   email: string;
-  role: 'Enterprise Administrator' | 'Lead MRV Scientist' | 'Field Dosing Engineer' | 'Accredited Verifier';
+  role: 'Admin' | 'AquaDrone user' | 'AquaNode user' | 'RiverNode user' | string;
   clearanceLevel: string;
   status: 'Active' | 'Invited' | 'Suspended';
   twoFactorEnabled: boolean;
   lastActive: string;
   assignedCatchment: string;
+  assignedAssets?: string[];
+  dosingAuthorized?: boolean;
+  accessStatus?: 'Granted' | 'Pending Approval' | 'Revoked' | 'Custom';
+  accessPurpose?: string;
+  modulePermissions?: UserModulePermissions;
 }
 
 export interface ActivityLogItem {

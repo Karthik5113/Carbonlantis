@@ -837,47 +837,118 @@ export const mrvReportPackagesData: MrvReportPackage[] = [
 export const userAccountsData: UserAccount[] = [
   {
     id: "usr-01",
-    name: "Dr. Elena Vance",
-    email: "operator@carbonlantis.com",
-    role: "Lead MRV Scientist",
-    clearanceLevel: "Level 3: Full Catchment Verification & Dosing Control",
+    name: "Rajesh Nair",
+    email: "r.nair@carbonlantis.com",
+    role: "Admin",
+    clearanceLevel: "Full Authority: Assets, Users, Batches & Workflows",
     status: "Active",
     twoFactorEnabled: true,
     lastActive: "Just now",
-    assignedCatchment: "Godavari Delta (All Reaches)"
+    assignedCatchment: "Global Operations",
+    assignedAssets: ["All System Assets (Global Scope)"],
+    dosingAuthorized: true,
+    accessStatus: "Granted",
+    accessPurpose: "Full root platform administration, user provisioning & emergency overrides",
+    modulePermissions: {
+      dashboard: true,
+      monitoring: true,
+      mineralDosing: "yes",
+      carbonRemoval: true,
+      userManagement: true,
+      settings: "yes"
+    }
   },
   {
     id: "usr-02",
     name: "Marcus Chen",
     email: "m.chen@carbonlantis.com",
-    role: "Field Dosing Engineer",
-    clearanceLevel: "Level 2: Platform Telemetry & Pump Modulation",
+    role: "AquaDrone user",
+    clearanceLevel: "Assigned Upstream, Dosing & Downstream AquaDrone Assets",
     status: "Active",
     twoFactorEnabled: true,
     lastActive: "15m ago",
-    assignedCatchment: "MDP-02 Delta Ranger"
+    assignedCatchment: "Kesinapalli Reach (MDP Fleet)",
+    assignedAssets: ["AquaDrone_MVP_001", "AquaDrone_002"],
+    dosingAuthorized: true,
+    accessStatus: "Granted",
+    accessPurpose: "Autonomous mobile dosing execution and transect sensor monitoring",
+    modulePermissions: {
+      dashboard: true,
+      monitoring: true,
+      mineralDosing: "authorized",
+      carbonRemoval: true,
+      userManagement: false,
+      settings: "limited"
+    }
   },
   {
     id: "usr-03",
-    name: "Sarah Jenkins, PE",
-    email: "s.jenkins@dnv-verifier.org",
-    role: "Accredited Verifier",
-    clearanceLevel: "Auditor: Cryptographic Ledger & Raw Telemetry (Read-Only)",
+    name: "Dr. Elena Vance",
+    email: "e.vance@carbonlantis.com",
+    role: "AquaNode user",
+    clearanceLevel: "Assigned AquaNode Stationary Buoys & MRV Telemetry",
     status: "Active",
     twoFactorEnabled: true,
-    lastActive: "2 hours ago",
-    assignedCatchment: "Independent Verifier Portal"
+    lastActive: "35m ago",
+    assignedCatchment: "Godavari Delta Estuary",
+    assignedAssets: ["AquaNode-01", "AquaNode-02"],
+    dosingAuthorized: false,
+    accessStatus: "Granted",
+    accessPurpose: "Estuarine water chemistry verification and continuous marine carbon drawdown analysis",
+    modulePermissions: {
+      dashboard: true,
+      monitoring: true,
+      mineralDosing: "no",
+      carbonRemoval: true,
+      userManagement: false,
+      settings: "limited"
+    }
   },
   {
     id: "usr-04",
-    name: "Rajesh Nair",
-    email: "r.nair@carbonlantis.com",
-    role: "Enterprise Administrator",
-    clearanceLevel: "Level 4: Superuser System Provisioning & Secrets",
+    name: "Alex Thorne",
+    email: "a.thorne@carbonlantis.com",
+    role: "RiverNode user",
+    clearanceLevel: "Assigned RiverNode Sonde Stations & Carbon Inflow Data",
     status: "Active",
     twoFactorEnabled: true,
-    lastActive: "1 hour ago",
-    assignedCatchment: "Global Operations"
+    lastActive: "2 hours ago",
+    assignedCatchment: "Godavari Main Stem (Yanam Reach)",
+    assignedAssets: ["RiverNode-01 (RN-G1)", "RiverNode-02"],
+    dosingAuthorized: false,
+    accessStatus: "Pending Approval",
+    accessPurpose: "Riverine flow velocity telemetry monitoring and acoustic stage data collection",
+    modulePermissions: {
+      dashboard: true,
+      monitoring: true,
+      mineralDosing: "no",
+      carbonRemoval: false,
+      userManagement: false,
+      settings: "no"
+    }
+  },
+  {
+    id: "usr-05",
+    name: "Priya Sharma",
+    email: "p.sharma@carbonlantis.com",
+    role: "AquaDrone user",
+    clearanceLevel: "AquaDrone Upstream Reconnaissance (Read-Only Telemetry)",
+    status: "Active",
+    twoFactorEnabled: true,
+    lastActive: "1 day ago",
+    assignedCatchment: "Upper Godavari Survey",
+    assignedAssets: ["AquaDrone_003 (Upstream Survey)"],
+    dosingAuthorized: false,
+    accessStatus: "Revoked",
+    accessPurpose: "Pre-season survey completed — all access revoked by default until reauthorized",
+    modulePermissions: {
+      dashboard: false,
+      monitoring: false,
+      mineralDosing: "no",
+      carbonRemoval: false,
+      userManagement: false,
+      settings: "no"
+    }
   }
 ];
 
@@ -885,38 +956,47 @@ export const activityLogsData: ActivityLogItem[] = [
   {
     id: "log-01",
     timestamp: "10 mins ago",
-    userName: "Dr. Elena Vance",
-    action: "Updated Peristaltic Dosing Setpoint to 180.5 kg/hr",
-    resource: "MDP-01 (KSP-MDP-01)",
+    userName: "Marcus Chen (AquaDrone user)",
+    action: "Updated Peristaltic Dosing Setpoint to 180.5 kg/hr [Authorized]",
+    resource: "AquaDrone_MVP_001 (ADR-MVP-001)",
     ipAddress: "192.168.1.104 (Encrypted Gateway VPN)",
     status: "Success"
   },
   {
     id: "log-02",
-    timestamp: "45 mins ago",
-    userName: "System Watchdog",
-    action: "Verified Cryptographic SHA-256 Telemetry Ingest Block #84920",
-    resource: "DRF Ingest API",
-    ipAddress: "10.0.4.12 (Internal RPC)",
+    timestamp: "28 mins ago",
+    userName: "Dr. Elena Vance (AquaNode user)",
+    action: "Retrieved pH & pCO2 Sensor Calibration Logs & Carbon Calculations",
+    resource: "AquaNode-01 (Estuarine Buoy)",
+    ipAddress: "192.168.1.109",
     status: "Success"
   },
   {
     id: "log-03",
-    timestamp: "2 hours ago",
-    userName: "Sarah Jenkins, PE",
-    action: "Exported Certified Baseline MRV Ledger (CSV + Audit Signature)",
-    resource: "Report #MRV-GDV-2026-Q3-01",
-    ipAddress: "142.250.180.45",
+    timestamp: "1 hour ago",
+    userName: "Rajesh Nair (Admin)",
+    action: "Approved Mineral Batch #MB-2026-OCT-09 & Created User Permissions",
+    resource: "Batch Management & User RBAC",
+    ipAddress: "10.0.4.12 (Internal RPC)",
     status: "Success"
   },
   {
     id: "log-04",
-    timestamp: "4 hours ago",
-    userName: "Marcus Chen",
-    action: "Initiated Line Purge Sequence on Slurry Injector Nozzle 2",
-    resource: "MDP-02 (GDV-MDP-02)",
-    ipAddress: "192.168.1.112",
+    timestamp: "2 hours ago",
+    userName: "Alex Thorne (RiverNode user)",
+    action: "Streamed 24-hr Riverine Water Velocity & Stage Inflow Telemetry",
+    resource: "RiverNode-01 (RN-G1)",
+    ipAddress: "142.250.180.45",
     status: "Success"
+  },
+  {
+    id: "log-05",
+    timestamp: "3 hours ago",
+    userName: "Priya Sharma (AquaDrone user)",
+    action: "Dosing actuation blocked: operational permissions required",
+    resource: "AquaDrone_003 (Pump Control)",
+    ipAddress: "192.168.1.118",
+    status: "Warning"
   }
 ];
 

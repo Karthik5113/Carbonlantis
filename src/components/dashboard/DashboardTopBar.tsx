@@ -44,19 +44,22 @@ export const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
   const getModuleTitle = () => {
     switch (activeTab) {
       case 'dashboard':
-        return '1. Dashboard — Operational Overview & Feedstock';
+        return 'Dashboard';
       case 'monitoring':
-        return '2. Monitoring — Real-Time Sonde Telemetry';
+        return 'Monitoring';
+      case 'slurry-preparation':
       case 'mineral-dosing':
-        return '3. Mineral & Dosing — Feedstock, Slurry & Pumps';
+        return 'Mineral & Dosing';
+      case 'dosing':
+        return 'Dosing';
       case 'carbon-removal':
-        return '4. Carbon Removal — Chemistry & MRV Accounting';
+        return 'Carbon Removal';
       case 'users':
-        return '5. User Management — Access Controls & Audit';
+        return 'User Management';
       case 'settings':
-        return '6. Settings — Platform Telemetry & Config';
+        return 'Settings';
       default:
-        return 'Carbonlantis MRV Platform';
+        return 'Dashboard';
     }
   };
 
@@ -80,14 +83,10 @@ export const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
               type="button"
               onClick={onToggleSidebar}
               className="hidden lg:flex items-center justify-center p-1.5 rounded-md text-carbon-muted hover:text-carbon-text hover:bg-slate-100 transition-colors focus:outline-none cursor-pointer"
-              title={isSidebarCollapsed ? "Expand sidebar (show full titles)" : "Shrink sidebar (show only icons)"}
-              aria-label={isSidebarCollapsed ? "Expand sidebar" : "Shrink sidebar"}
+              title="Toggle sidebar"
+              aria-label="Toggle sidebar"
             >
-              {isSidebarCollapsed ? (
-                <PanelLeftOpen className="w-4 h-4" />
-              ) : (
-                <PanelLeftClose className="w-4 h-4" />
-              )}
+              <Menu className="w-5 h-5" />
             </button>
           )}
 
@@ -95,9 +94,6 @@ export const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
             <h1 className="text-base sm:text-lg font-semibold text-carbon-text tracking-tight font-sans">
               {getModuleTitle()}
             </h1>
-            <p className="text-xs text-carbon-muted hidden sm:block">
-              Inland Water Alkalinity Enhancement MRV Platform • Godavari Pilot Catchment
-            </p>
           </div>
         </div>
 

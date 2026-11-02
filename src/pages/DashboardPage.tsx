@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { DashboardTopBar } from '../components/dashboard/DashboardTopBar';
+import { Menu } from 'lucide-react';
 import { DashboardOverviewTab } from '../components/dashboard/tabs/DashboardOverviewTab';
 import { MonitoringTab } from '../components/dashboard/tabs/MonitoringTab';
 import { MineralDosingTab } from '../components/dashboard/tabs/MineralDosingTab';
+import { DosingTab } from '../components/dashboard/tabs/DosingTab';
 import { CarbonRemovalTab } from '../components/dashboard/tabs/CarbonRemovalTab';
 import { UserManagementTab } from '../components/dashboard/tabs/UserManagementTab';
 import { SettingsTab } from '../components/dashboard/tabs/SettingsTab';
 import { DashboardTabId } from '../types';
+import { SlurryDosingProvider } from '../context/SlurryDosingContext';
 
 export const DashboardPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const rawTab = searchParams.get('tab');
   const initialTab: DashboardTabId =
     rawTab === 'monitoring' ||
+    rawTab === 'slurry-preparation' ||
     rawTab === 'mineral-dosing' ||
+    rawTab === 'dosing' ||
     rawTab === 'carbon-removal' ||
     rawTab === 'users' ||
     rawTab === 'settings'
@@ -72,8 +76,11 @@ export const DashboardPage: React.FC = () => {
         return <DashboardOverviewTab />;
       case 'monitoring':
         return <MonitoringTab />;
+      case 'slurry-preparation':
       case 'mineral-dosing':
         return <MineralDosingTab />;
+      case 'dosing':
+        return <DosingTab />;
       case 'carbon-removal':
         return <CarbonRemovalTab />;
       case 'users':
@@ -86,8 +93,9 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-carbon-bg text-carbon-text font-sans">
-      {/* 1. Left Menu Bar (Sidebar) with collapsible / expandable functionality */}
+    <SlurryDosingProvider>
+      <div className="flex min-h-screen bg-carbon-bg text-carbon-text font-sans">
+        {/* 1. Left Menu Bar (Sidebar) with collapsible / expandable functionality */}
       <DashboardSidebar
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -100,18 +108,21 @@ export const DashboardPage: React.FC = () => {
       {/* 2. Main Content Area (Dynamic desktop offset matching collapsed/expanded sidebar) */}
       <div
         className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
-          isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+          isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-80'
         }`}
       >
-        {/* Top Operational Bar */}
-        <DashboardTopBar
-          activeTab={activeTab}
-          onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)}
-          onRefresh={handleRefresh}
-          isRefreshing={isRefreshing}
-          isSidebarCollapsed={isSidebarCollapsed}
-          onToggleSidebar={handleToggleSidebar}
-        />
+        {/* Mobile Header Bar (Only visible on small screens < lg) */}
+        <div className="lg:hidden flex items-center justify-between px-4 py-2.5 bg-white border-b border-carbon-border">
+          <button
+            type="button"
+            onClick={() => setIsMobileSidebarOpen(true)}
+            className="p-1.5 rounded-md text-slate-700 hover:text-slate-900 hover:bg-slate-100 focus:outline-none cursor-pointer"
+            aria-label="Open sidebar menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <span className="text-xs font-semibold text-slate-800">Carbonlantis MRV</span>
+        </div>
 
         {/* Dynamic Tab Content Area */}
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
@@ -119,5 +130,7 @@ export const DashboardPage: React.FC = () => {
         </main>
       </div>
     </div>
+  </SlurryDosingProvider>
   );
 };
+

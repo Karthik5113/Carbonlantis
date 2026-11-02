@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HeroSection } from '../components/home/HeroSection';
 import { DeploymentMapCard } from '../components/home/DeploymentMapCard';
 import { AlertsCard } from '../components/home/AlertsCard';
 import { publicHomeData } from '../data/publicHome';
 import { publicApiService } from '../services/api';
 import { AlertItemData, DeploymentSite, StatItem } from '../types';
-import { Info, Database } from 'lucide-react';
+import { Info, Database, Lock } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<StatItem[]>(publicHomeData.stats);
   const [deployments, setDeployments] = useState<DeploymentSite[]>(publicHomeData.deployments);
   const [alerts, setAlerts] = useState<AlertItemData[]>(publicHomeData.alerts);
@@ -99,20 +101,68 @@ export const HomePage: React.FC = () => {
       <section className="w-full py-8 sm:py-10 flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-            {/* Left Card: Deployment Map */}
-            <div className="h-full">
-              <DeploymentMapCard
-                deployments={deployments}
-                isDemo={dataSource === 'demo-cache'}
-              />
+            {/* Left Card: Deployment Map — Locked */}
+            <div
+              className="h-full relative cursor-pointer group"
+              onClick={() => navigate('/login')}
+              title="Operator login required to access live map"
+            >
+              {/* Actual card (pointer-events off so clicks go to wrapper) */}
+              <div className="pointer-events-none select-none">
+                <DeploymentMapCard
+                  deployments={deployments}
+                  isDemo={dataSource === 'demo-cache'}
+                />
+              </div>
+
+              {/* Blur + Lock overlay */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden">
+                {/* Bottom-half gradient blur mask */}
+                <div className="absolute inset-0 backdrop-blur-[3px] bg-white/30" style={{ maskImage: 'linear-gradient(to bottom, transparent 30%, white 70%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 30%, white 70%)' }} />
+                {/* Full overlay for bottom half */}
+                <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-white/60 backdrop-blur-sm" />
+                {/* Lock badge centred */}
+                <div className="absolute inset-0 flex flex-col items-center justify-end pb-10 gap-2">
+                  <div className="flex flex-col items-center gap-2 bg-white/90 border border-slate-200 rounded-xl px-5 py-3 shadow-md group-hover:shadow-lg transition-shadow">
+                    <Lock className="w-5 h-5 text-slate-600 group-hover:text-blue-600 transition-colors" />
+                    <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">
+                      Operator Login Required
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Right Card: Telemetry Alerts */}
-            <div className="h-full">
-              <AlertsCard
-                alerts={alerts}
-                isDemo={dataSource === 'demo-cache'}
-              />
+            {/* Right Card: Telemetry Alerts — Locked */}
+            <div
+              className="h-full relative cursor-pointer group"
+              onClick={() => navigate('/login')}
+              title="Operator login required to access live alerts"
+            >
+              {/* Actual card (pointer-events off so clicks go to wrapper) */}
+              <div className="pointer-events-none select-none">
+                <AlertsCard
+                  alerts={alerts}
+                  isDemo={dataSource === 'demo-cache'}
+                />
+              </div>
+
+              {/* Blur + Lock overlay */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden">
+                {/* Bottom-half gradient blur mask */}
+                <div className="absolute inset-0 backdrop-blur-[3px] bg-white/30" style={{ maskImage: 'linear-gradient(to bottom, transparent 30%, white 70%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 30%, white 70%)' }} />
+                {/* Full overlay for bottom half */}
+                <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-white/60 backdrop-blur-sm" />
+                {/* Lock badge centred */}
+                <div className="absolute inset-0 flex flex-col items-center justify-end pb-10 gap-2">
+                  <div className="flex flex-col items-center gap-2 bg-white/90 border border-slate-200 rounded-xl px-5 py-3 shadow-md group-hover:shadow-lg transition-shadow">
+                    <Lock className="w-5 h-5 text-slate-600 group-hover:text-blue-600 transition-colors" />
+                    <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">
+                      Operator Login Required
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

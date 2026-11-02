@@ -52,12 +52,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   }, []);
 
   const tabs = [
-    { id: 'dashboard', name: '1. Dashboard', icon: Activity, active: true },
-    { id: 'telemetry', name: '2. Live Telemetry', icon: Radio, phase: 'Phase 2' },
-    { id: 'dosing', name: '3. Dosing Operations', icon: Sliders, phase: 'Phase 2' },
-    { id: 'inventory', name: '4. Mineral Inventory', icon: Box, phase: 'Phase 2' },
-    { id: 'calculations', name: '5. MRV Calculations', icon: Scale, phase: 'Phase 2' },
-    { id: 'audit', name: '6. Verifier Audit', icon: FileCheck2, phase: 'Phase 2' },
+    { id: 'dashboard', name: 'Dashboard', icon: Activity, active: true },
+    { id: 'telemetry', name: 'Live Telemetry', icon: Radio, phase: 'Phase 2' },
+    { id: 'dosing', name: 'Dosing Operations', icon: Sliders, phase: 'Phase 2' },
+    { id: 'inventory', name: 'Mineral Inventory', icon: Box, phase: 'Phase 2' },
+    { id: 'calculations', name: 'MRV Calculations', icon: Scale, phase: 'Phase 2' },
+    { id: 'audit', name: 'Verifier Audit', icon: FileCheck2, phase: 'Phase 2' },
   ];
 
   const handleTabClick = (tabId: string) => {

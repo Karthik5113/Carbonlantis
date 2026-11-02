@@ -9,6 +9,8 @@ interface DeploymentMapProps {
   className?: string;
   height?: string;
   interactive?: boolean;
+  fitBounds?: boolean;
+  children?: React.ReactNode;
 }
 
 export const DeploymentMap: React.FC<DeploymentMapProps> = ({
@@ -17,6 +19,8 @@ export const DeploymentMap: React.FC<DeploymentMapProps> = ({
   className = '',
   height = 'h-[380px]',
   interactive = true,
+  fitBounds = false,
+  children,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -143,7 +147,16 @@ export const DeploymentMap: React.FC<DeploymentMapProps> = ({
       marker.addTo(map);
       markersRef.current[site.id] = marker;
     });
-  }, [deployments, selectedFilter, isMapLoaded]);
+
+    if (fitBounds && filtered.length > 0) {
+      try {
+        const group = L.featureGroup(Object.values(markersRef.current));
+        map.fitBounds(group.getBounds().pad(0.15));
+      } catch (err) {
+        // bounds fit gracefully falls back
+      }
+    }
+  }, [deployments, selectedFilter, isMapLoaded, fitBounds]);
 
   const handleResetView = () => {
     if (mapInstanceRef.current) {
@@ -169,11 +182,11 @@ export const DeploymentMap: React.FC<DeploymentMapProps> = ({
       </div>
 
       {/* Center Map Control Button */}
-      <div className="absolute bottom-3 right-3 z-10">
+      <div className="absolute bottom-3 left-3 z-10">
         <button
           type="button"
           onClick={handleResetView}
-          className="btn-press p-1.5 rounded bg-white text-carbon-text border border-carbon-border shadow-xs hover:bg-slate-50 text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
+          className="btn-press p-1.5 rounded-lg bg-white/75 backdrop-blur-md text-carbon-text border border-carbon-border/70 shadow-xs hover:bg-white text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer"
           title="Reset map view to Godavari Delta"
         >
           <RefreshCw className="w-3.5 h-3.5 text-carbon-muted" />
@@ -183,7 +196,7 @@ export const DeploymentMap: React.FC<DeploymentMapProps> = ({
 
       {/* Selected Site Drawer Preview */}
       {selectedSite && (
-        <div className="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-md z-20 bg-white border border-carbon-border rounded-lg p-3.5 shadow-popover animate-in fade-in duration-150">
+        <div className="absolute bottom-12 left-3 right-3 sm:right-auto sm:max-w-md z-30 bg-white/95 backdrop-blur-md border border-carbon-border rounded-lg p-3.5 shadow-popover animate-in fade-in duration-150">
           <div className="flex items-start justify-between gap-2 mb-1">
             <div>
               <span className="text-[10px] font-mono text-carbon-muted uppercase">{selectedSite.siteCode}</span>
@@ -207,6 +220,9 @@ export const DeploymentMap: React.FC<DeploymentMapProps> = ({
           )}
         </div>
       )}
+
+      {/* Embedded Overlays / Custom Legend */}
+      {children}
     </div>
   );
 };
